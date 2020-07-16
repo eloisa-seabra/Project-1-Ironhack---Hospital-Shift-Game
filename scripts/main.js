@@ -3,13 +3,12 @@ const context = canvas.getContext('2d');
 //
 
 const game = new Game(canvas);
-//debugger;
+
 game.drawStartScreen();
 
-// add event listener click
+// add event listener click to button
 const startGame = document.getElementById('button');
 window.addEventListener('click', () => {
-  debugger;
   game.clean();
   game.drawEverything();
   game.loop();

@@ -6,6 +6,7 @@ class Character {
     this.row = row;
   }
 
+  //methods to check if movement of the player is restricted by walls of the maze or not
   moveUp() {
     const nextRow = this.row - 1;
     const nextColumn = this.col;
@@ -50,6 +51,7 @@ class Character {
     }
   }
 
+  // Check collision with the borders of the canvas
   borderCollision() {
     //check boundaries for borders
     if (this.col < 0) {

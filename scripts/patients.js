@@ -3,7 +3,6 @@ const drycoughingSoundUrl =
   'https://raw.githubusercontent.com/coughresearch/Cough-data/master/Dry_cough/man%20cough%20dry%20inhale%20zpasplat.m4a';
 const drycoughSound = new Audio(drycoughingSoundUrl);
 
-// All of this componets know how to operate, but do not know when to operate. They have: runLogic() method, draw(), detectCollision(), etc.
 class Patients {
   constructor(game, col, row) {
     this.game = game;
@@ -12,6 +11,7 @@ class Patients {
     this.setRandomPosition();
   }
 
+  // random position of patients appearing in the maze recognizing wall borders and canvas borders
   setRandomPosition() {
     this.col = Math.floor(Math.random() * 20);
     this.row = Math.floor(Math.random() * 20);
@@ -39,6 +39,7 @@ class Patients {
     }
   }
 
+  // to check position of player and patients array - once the same, it will remove the patient from the array and will increase score
   patientsCollision() {
     if (
       this.game.player.row === this.row &&

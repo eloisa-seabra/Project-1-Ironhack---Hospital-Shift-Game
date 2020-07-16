@@ -13,8 +13,9 @@ body {
   align-items: center;
 }
 canvas {
-  background-color: white;
-
+  /* background-color: white; */
+  background-image: url('../images/canvas.jpg');
+  background-size: 100%;
   border: 30px solid #004d70;
 }
 button {

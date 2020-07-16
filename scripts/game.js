@@ -3,7 +3,21 @@ const coughingSoundUrl =
   'https://raw.githubusercontent.com/coughresearch/Cough-data/master/Dry_cough/Man%20cough%20x5%20dry%20chesty%20zapsplat.m4a';
 const coughSound = new Audio(coughingSoundUrl);
 
-//sound for picking up object
+// sound for this.running game
+const backgroundMusicUrl =
+  'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/BoxCat_Games/Nameless_The_Hackers_RPG_Soundtrack/BoxCat_Games_-_11_-_Assignment.mp3';
+const backMusic = new Audio(backgroundMusicUrl);
+
+//sound for winning
+const winningMusicUrl =
+  'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/BoxCat_Games/Nameless_The_Hackers_RPG_Soundtrack/BoxCat_Games_-_14_-_Battle_End.mp3';
+const winningMusic = new Audio(winningMusicUrl);
+
+// sound for losing and volume
+const losingMusicUrl =
+  'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/BoxCat_Games/Nameless_The_Hackers_RPG_Soundtrack/BoxCat_Games_-_26_-_Defeat.mp3';
+const losingMusic = new Audio(losingMusicUrl);
+losingMusic.volume = 1;
 
 class Game {
   constructor(canvas) {
@@ -15,14 +29,11 @@ class Game {
     this.generatePatients();
     this.player = new Character(this, 18, 18);
 
-    // this.meds = new Medication(this, 3, 3);
-
     // timer to manage patients creation
     this.createPatientTimer = 0;
-    this.createPatientInterval = 8000;
+    this.createPatientInterval = 7000;
 
     this.timer = new Timer(this);
-    // this.arrayScore = [];
     this.score = new Score(this);
     this.running = true;
   }
@@ -50,7 +61,7 @@ class Game {
     context.fillStyle = 'black';
     context.font = '28px sans-serif';
     context.fillText('During your 10hours shift,', 240, 440);
-    context.fillText('you need to reach at least 20 patients,', 170, 470);
+    context.fillText('you need to reach at least 24 patients,', 170, 470);
     context.fillText('to save the day!', 310, 500);
     context.font = '40px sans-serif';
     context.fillText('Move the doctor with the arrow keys,', 80, 580);
@@ -64,6 +75,8 @@ class Game {
   runLogic(timestamp) {
     this.player.borderCollision();
 
+    // everytime the doctor saves 3 patients, another 3 will be generated and every 7seconds passed will generate 3 more.
+
     for (let patient of this.patientsArray) {
       patient.patientsCollision();
       if (
@@ -76,15 +89,18 @@ class Game {
       }
     }
 
-    if (this.score.score >= 20 && Math.floor(timestamp / 1000 / 6) === 10) {
+    //  If this conditions are met you either lose or win the game.
+    // If time reaches 10hours shift and the patients saved are less than 22 than you lose, else you win.
+
+    if (this.score.score >= 24 && Math.floor(timestamp / 1000 / 6) === 10) {
       this.win();
-      console.log(`Congrats! You are a rockstar! Covid loses today!`);
+      winningMusic.play();
     } else if (
-      this.score.score < 20 &&
+      this.score.score < 24 &&
       Math.floor(timestamp / 1000 / 6) === 10
     ) {
       this.lose();
-      console.log(`You lose. Covid wins`);
+      losingMusic.play().volume(0, 5);
     }
   }
 
@@ -110,6 +126,8 @@ class Game {
     }
   }
 
+  // movement of the player with arrow keys
+
   setKeyBindings() {
     window.addEventListener('keydown', event => {
       event.preventDefault();
@@ -130,9 +148,14 @@ class Game {
     });
   }
 
+  // methods for winning
   win() {
     this.paintWin();
     this.running = false;
+    winningMusic.play();
+    coughSound.pause();
+    drycoughSound.pause();
+    backMusic.pause();
   }
 
   paintWin() {
@@ -161,9 +184,14 @@ class Game {
     context.restore();
   }
 
+  //methods for losing
   lose() {
     this.paintLose();
     this.running = false;
+    losingMusic.play();
+    coughSound.pause();
+    drycoughSound.pause();
+    backMusic.pause();
   }
 
   paintLose() {
@@ -204,7 +232,6 @@ class Game {
     rules.addEventListener('load', () => {
       context.drawImage(rules, 125, 480, 540, 330);
     });
-    //context.drawImage(rules, 400, 600, 300, 200);
 
     context.restore();
   }
@@ -214,6 +241,7 @@ class Game {
     this.runLogic(timestamp);
 
     if (this.running === true) {
+      backMusic.play();
       this.clean();
       this.drawEverything(timestamp);
       window.requestAnimationFrame(timestamp => this.loop(timestamp));
