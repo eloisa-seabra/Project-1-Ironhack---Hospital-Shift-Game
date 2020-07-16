@@ -1,0 +1,17 @@
+html,
+body {
+  height: 100%;
+  background-image: url('../images/background.jpg');
+  background-size: 100%;
+  background-position: center;
+}
+
+body {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+canvas {
+  border: 30px solid #004d70;
+}
