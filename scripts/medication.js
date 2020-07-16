@@ -1,25 +1,18 @@
-// sound of coughing
-const drycoughingSoundUrl =
-  'https://raw.githubusercontent.com/coughresearch/Cough-data/master/Dry_cough/man%20cough%20dry%20inhale%20zpasplat.m4a';
-const drycoughSound = new Audio(drycoughingSoundUrl);
-
-// All of this componets know how to operate, but do not know when to operate. They have: runLogic() method, draw(), detectCollision(), etc.
-class Patients {
+class Medication {
   constructor(game, col, row) {
     this.game = game;
     this.col = col;
     this.row = row;
     this.setRandomPosition();
   }
-
   setRandomPosition() {
     this.col = Math.floor(Math.random() * 20);
     this.row = Math.floor(Math.random() * 20);
-    this.patientInsideCanvas();
+    this.medsInsideCanvas();
     this.collisionWithMaze();
   }
 
-  patientInsideCanvas() {
+  medsInsideCanvas() {
     if (this.col === 19 || this.row === 19) {
       this.setRandomPosition();
     }
@@ -44,20 +37,18 @@ class Patients {
       this.game.player.row === this.row &&
       this.game.player.col === this.col
     ) {
-      this.game.patientsArray.splice(this.game.patientsArray.indexOf(this), 1);
       this.game.score.score++;
-      drycoughSound.play();
     }
   }
 
-  drawPatients() {
+  drawMeds() {
     const ctx = this.game.context;
-    const patientImage = new Image();
-    patientImage.src = 'images/patients.png';
+    const medsImage = new Image();
+    medsImage.src = 'images/patients.png';
 
-    patientImage.addEventListener('load', () => {
+    medsImage.addEventListener('load', () => {
       ctx.drawImage(
-        patientImage,
+        medsImage,
         this.col * SQUARE_SIZE,
         this.row * SQUARE_SIZE,
         SQUARE_SIZE * 2,
@@ -65,7 +56,7 @@ class Patients {
       );
     });
     ctx.drawImage(
-      patientImage,
+      medsImage,
       this.col * SQUARE_SIZE,
       this.row * SQUARE_SIZE,
       SQUARE_SIZE * 2,

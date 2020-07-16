@@ -10,9 +10,9 @@ class Score {
 
     context.save();
     context.fillStyle = 'black';
-    context.font = '18px sans-serif';
+    context.font = '20px sans-serif';
 
-    context.fillText('Saved: ' + this.score + '  patients', 455, 17);
+    context.fillText('Saved: ' + this.score + '  patients', 630, 17);
 
     context.restore();
   }

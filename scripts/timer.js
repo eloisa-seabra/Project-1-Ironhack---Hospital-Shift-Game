@@ -8,7 +8,7 @@ class Timer {
     const time = timestamp;
     context.save();
     context.fillStyle = 'black';
-    context.font = '18px sans-serif';
+    context.font = '20px sans-serif';
 
     context.fillText(
       'Shift Hours passed:' + Math.floor(time / 1000 / 6),

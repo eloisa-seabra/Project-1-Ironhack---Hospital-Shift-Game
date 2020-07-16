@@ -1,10 +1,7 @@
-const coughSound = new Audio(
-  'https://raw.githubusercontent.com/coughresearch/Cough-data/master/Dry_cough/man%20coughing%20close%20and%20dry%20cough%20zapsplat.m4a'
-);
-
-//sound for losing
-
-//sound for reaching patient
+// coughing sound
+const coughingSoundUrl =
+  'https://raw.githubusercontent.com/coughresearch/Cough-data/master/Dry_cough/Man%20cough%20x5%20dry%20chesty%20zapsplat.m4a';
+const coughSound = new Audio(coughingSoundUrl);
 
 //sound for picking up object
 
@@ -18,6 +15,8 @@ class Game {
     this.generatePatients();
     this.player = new Character(this, 18, 18);
 
+    // this.meds = new Medication(this, 3, 3);
+
     // timer to manage patients creation
     this.createPatientTimer = 0;
     this.createPatientInterval = 8000;
@@ -26,6 +25,40 @@ class Game {
     // this.arrayScore = [];
     this.score = new Score(this);
     this.running = true;
+  }
+
+  drawStartScreen() {
+    this.clean();
+
+    const context = this.context;
+
+    context.fillStyle = 'white';
+
+    context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    context.save();
+    const stop = new Image();
+    stop.src = 'images/stop.jpg';
+    stop.addEventListener('load', () => {
+      context.drawImage(stop, 145, -40, 500, 300);
+    });
+
+    context.fillStyle = '#004d70';
+
+    context.font = '130px sans-serif';
+    context.fillText('Hospital Shift!', 20, 360);
+    context.fillStyle = 'black';
+    context.font = '28px sans-serif';
+    context.fillText('During your 10hours shift,', 240, 440);
+    context.fillText('you need to reach at least 20 patients,', 170, 470);
+    context.fillText('to save the day!', 310, 500);
+    context.font = '40px sans-serif';
+    context.fillText('Move the doctor with the arrow keys,', 80, 580);
+    context.fillStyle = 'red';
+    context.font = '70px sans-serif';
+    context.fillText('Your shift starts now!', 80, 680);
+
+    context.restore();
   }
 
   runLogic(timestamp) {
@@ -37,19 +70,19 @@ class Game {
         this.patientsArray.length === 0 ||
         this.createPatientTimer < timestamp - this.createPatientInterval
       ) {
-        //console.log(patientsArray.length);
         this.createPatientTimer = timestamp;
         this.generatePatients();
-        //coughSound.play();
+        coughSound.play();
       }
     }
-    // create condition
-    //debugger;
-    //const timeFrame = Math.floor(timestamp / 1000);
-    if (this.score >= 25 && Math.floor(timestamp / 1000 / 6) === 10) {
-      console.log(`You saved the day!`);
-      //this.win()
-    } else if (Math.floor(timestamp / 1000 / 6) === 10) {
+
+    if (this.score.score >= 20 && Math.floor(timestamp / 1000 / 6) === 10) {
+      this.win();
+      console.log(`Congrats! You are a rockstar! Covid loses today!`);
+    } else if (
+      this.score.score < 20 &&
+      Math.floor(timestamp / 1000 / 6) === 10
+    ) {
       this.lose();
       console.log(`You lose. Covid wins`);
     }
@@ -64,12 +97,12 @@ class Game {
     this.player.drawPlayer();
     this.timer.paint(timestamp);
     this.score.paint();
+    // this.meds.drawMeds();
     for (let patient of this.patientsArray) {
       patient.drawPatients();
     }
   }
 
-  // Create more patients - NOT WORKING
   generatePatients() {
     for (let i = 0; i < 3; i++) {
       const patient = new Patients(this, 3, 3);
@@ -89,7 +122,6 @@ class Game {
           break;
         case 39:
           this.player.moveRight();
-
           break;
         case 40:
           this.player.moveDown();
@@ -99,42 +131,89 @@ class Game {
   }
 
   win() {
-    this.running = false;
     this.paintWin();
+    this.running = false;
   }
 
   paintWin() {
     this.clean();
-    const context = this.game.context;
+
+    const context = this.context;
+
+    context.fillStyle = '#B8EDF6';
+
+    context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     context.save();
 
-    context.fillStyle = 'lightblue';
+    context.fillStyle = '#004d70';
 
-    context.fillRect(x, y, this.canvas.width, this.canvas.height);
+    context.font = '80px sans-serif';
+    context.fillText('You saved the day!', 70, 200);
+
+    const workers = new Image();
+    workers.src = 'images/workers.jpg';
+    workers.addEventListener('load', () => {
+      context.drawImage(workers, 50, 300, 700, 500);
+    });
+    context.fillStyle = '#004d70';
 
     context.restore();
   }
 
   lose() {
-    this.running = false;
     this.paintLose();
+    this.running = false;
   }
 
   paintLose() {
-    debugger;
     this.clean();
-    const ctx = this.context;
-    const gameover = new Image();
-    gameover.src = 'images/gameover-covid.jpg';
-    ctx.drawImage(gameover, 0, 0, this.canvas.width, this.canvas.height);
+
+    const context = this.context;
+
+    context.save();
+
+    context.fillStyle = '#004d70';
+
+    context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    context.fillStyle = 'red';
+    context.font = '140px sans-serif';
+
+    context.fillText('Game Over!', 20, 130);
+
+    context.fillStyle = 'black';
+    context.font = '34px sans-serif';
+    context.fillText('You saved a few patients,', 200, 200);
+    context.fillText('but you couldn´t save them all!', 160, 240);
+    context.fillStyle = 'white';
+    context.font = '28px sans-serif';
+    context.fillText('If this made you feel frustrated,', 200, 300);
+    context.font = '28px sans-serif';
+    context.fillText(
+      'imagine the reality for healthcare professionals!',
+      90,
+      330
+    );
+    context.font = '44px sans-serif';
+    context.fillText('Respect our front-line pros,', 140, 400);
+    context.font = '48px sans-serif';
+    context.fillText('respect the rules!', 220, 460);
+
+    const rules = new Image();
+    rules.src = 'images/rules.jpg';
+    rules.addEventListener('load', () => {
+      context.drawImage(rules, 125, 480, 540, 330);
+    });
+    //context.drawImage(rules, 400, 600, 300, 200);
+
+    context.restore();
   }
 
   loop(timestamp) {
     // Run logic
     this.runLogic(timestamp);
 
-    if ((this.running = true)) {
+    if (this.running === true) {
       this.clean();
       this.drawEverything(timestamp);
       window.requestAnimationFrame(timestamp => this.loop(timestamp));
