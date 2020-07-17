@@ -2,16 +2,19 @@
 const coughingSoundUrl =
   'https://raw.githubusercontent.com/coughresearch/Cough-data/master/Dry_cough/Man%20cough%20x5%20dry%20chesty%20zapsplat.m4a';
 const coughSound = new Audio(coughingSoundUrl);
+coughSound.volume = 0.4;
 
 // sound for this.running game
 const backgroundMusicUrl =
   'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/BoxCat_Games/Nameless_The_Hackers_RPG_Soundtrack/BoxCat_Games_-_11_-_Assignment.mp3';
 const backMusic = new Audio(backgroundMusicUrl);
+backMusic.volume = 0.3;
 
 //sound for winning
 const winningMusicUrl =
   'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/BoxCat_Games/Nameless_The_Hackers_RPG_Soundtrack/BoxCat_Games_-_14_-_Battle_End.mp3';
 const winningMusic = new Audio(winningMusicUrl);
+winningMusic.volume = 0.3;
 
 // sound for losing and volume
 const losingMusicUrl =
@@ -63,7 +66,7 @@ class Game {
     context.fillStyle = 'black';
     context.font = '28px sans-serif';
     context.fillText('During your 10hours shift,', 240, 440);
-    context.fillText('you need to reach at least 24 patients,', 170, 470);
+    context.fillText('you need to reach at least 25 patients,', 170, 470);
     context.fillText('to save the day!', 310, 500);
     context.font = '40px sans-serif';
     context.fillText('Move the doctor with the arrow keys,', 80, 580);
@@ -88,6 +91,7 @@ class Game {
     this.score.score = 0;
     this.clean();
     this.drawEverything();
+    this.running = true;
     this.loop();
   }
 
@@ -111,12 +115,15 @@ class Game {
     //  If this conditions are met you either lose or win the game.
     // If time reaches 10hours shift and the patients saved are less than 22 than you lose, else you win.
 
-    if (this.score.score >= 24 && Math.floor(timestamp / 1000 / 6) === 10) {
+    if (
+      this.score.score >= 25 &&
+      Math.floor((timestamp - this.gameStartingTime) / 1000 / 6) === 10
+    ) {
       this.win();
       winningMusic.play();
     } else if (
-      this.score.score < 24 &&
-      Math.floor(timestamp / 1000 / 6) === 10
+      this.score.score < 25 &&
+      Math.floor((timestamp - this.gameStartingTime) / 1000 / 6) === 10
     ) {
       this.lose();
       losingMusic.play().volume(0, 5);
