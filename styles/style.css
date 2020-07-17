@@ -13,7 +13,6 @@ body {
   align-items: center;
 }
 canvas {
-  /* background-color: white; */
   background-image: url('../images/canvas.jpg');
   background-size: 100%;
   border: 30px solid #004d70;
@@ -36,3 +35,17 @@ button:hover {
   background-color: #4caf50;
   color: white;
 }
+
+/* #startdiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+#restartdiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+} */

@@ -68,7 +68,7 @@ class Character {
   drawPlayer() {
     const doctor = new Image();
     const ctx = this.game.context;
-    doctor.src = 'collection-professional-doctors/doctors.png';
+    doctor.src = 'images/doctor.png';
 
     doctor.addEventListener('load', () => {
       ctx.drawImage(

@@ -6,6 +6,7 @@ const COUNT_COLUMN = 20;
 const COUNT_ROW = 20;
 const SQUARE_SIZE = width / COUNT_COLUMN;
 
+// creating 2d nested array of 20x20 - true will represent a wall
 const layout = [
   [
     false,

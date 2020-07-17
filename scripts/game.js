@@ -28,6 +28,8 @@ class Game {
     this.patientsArray = [];
     this.generatePatients();
     this.player = new Character(this, 18, 18);
+    this.gameStarted = false;
+    this.gameStartingTime = 0;
 
     // timer to manage patients creation
     this.createPatientTimer = 0;
@@ -72,6 +74,23 @@ class Game {
     context.restore();
   }
 
+  restart() {
+    this.player = new Character(this, 18, 18);
+    this.maze = new Maze(this);
+    this.timer = new Timer(this);
+    this.gameStarted = true;
+    this.gameStartingTime = 0;
+    this.score = new Score(this);
+    this.patientsArray = [];
+    this.generatePatients();
+    this.createPatientTimer = 0;
+    this.createPatientInterval = 7000;
+    this.score.score = 0;
+    this.clean();
+    this.drawEverything();
+    this.loop();
+  }
+
   runLogic(timestamp) {
     this.player.borderCollision();
 
@@ -111,9 +130,9 @@ class Game {
   drawEverything(timestamp) {
     this.maze.paint();
     this.player.drawPlayer();
-    this.timer.paint(timestamp);
+    this.timer.paint(timestamp - this.gameStartingTime);
     this.score.paint();
-    // this.meds.drawMeds();
+
     for (let patient of this.patientsArray) {
       patient.drawPatients();
     }
@@ -237,6 +256,10 @@ class Game {
   }
 
   loop(timestamp) {
+    if (this.gameStarted && timestamp) {
+      this.gameStartingTime = timestamp;
+      this.gameStarted = false;
+    }
     // Run logic
     this.runLogic(timestamp);
 
